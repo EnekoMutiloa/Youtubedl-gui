@@ -3,12 +3,11 @@ import os
 
 class TextFile:
 
-    def __init__(self):
+    def __init__(self, name = 'list.txt'):
         self.file = None
-        self.name = None
-
-    def create_text_file(self, name):
         self.name = name
+
+    def create_text_file(self):
         self.file = open(self.name, 'w')
 
     def close_and_delete_file(self):
