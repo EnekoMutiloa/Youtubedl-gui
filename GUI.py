@@ -43,10 +43,10 @@ class MusicDownloadGUI:
         self.file = TextFile(f_name)
         self.file.create_text_file()
 
-        self.createWidgets()
+        self.initGui()
 
 
-    def createWidgets(self):
+    def initGui(self):
         '''Metodo que crea todos los widgets necesarios para manejar la interfaz. Botones, cuadros de escritura, etc.'''
         self.top_frame = Frame(relief = 'sunken', bg = 'black')
         self.label = Label(self.master, text="Escribir a continuación las direcciones de las que se quiere descargar la música. Una línea por url (dirección de internet):").pack()#(side=LEFT)
