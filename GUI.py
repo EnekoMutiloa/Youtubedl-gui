@@ -63,6 +63,7 @@ class MusicDownloadGUI:
 
     def download_from_text(self):
         '''Metodo mediante el cual se realiza la descarga'''
+        ##HAY QUE SEGUIR CON ESTE PUNTO. FALLA EL METODO GET
         print(len(self.entrada_variable.get("1.0", END)))
         self.file.write_in_file(self.entrada_variable.get("1.0", END))
         res = subprocess.check_output(["youtube-dl", "--extract-audio", "--audio-format", "mp3", "-a", self.file.get_name])
