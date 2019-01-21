@@ -70,6 +70,7 @@ class MusicDownloadGUI:
 		os.system("youtube-dl --extract-audio --audio-format mp3 -a " + self.f_name)
 		#subprocess.run(["youtube-dl --extract-audio --audio-format mp3 -a", self.f_name])
 		#https://www.youtube.com/watch?v=AXvr66tOERo&frags=pl%2Cwn
+		#https://www.youtube.com/watch?v=8t4O5RnLSKI&frags=pl%2Cwn
 		self.delete_file()
 		messagebox.showinfo("Hecho", "Se ha completado la descarga.")
 
