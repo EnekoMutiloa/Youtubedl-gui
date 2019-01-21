@@ -67,7 +67,8 @@ class MusicDownloadGUI:
 	def download_from_text(self):
 		'''Metodo mediante el cual se realiza la descarga'''
 		self.write_in_text()
-		res = subprocess.check_output(["youtube-dl", "--extract-audio", "--audio-format", "mp3", "-a", self.get_name])
+		os.system("youtube-dl --extract-audio --audio-format mp3 -a " + self.f_name)
+		#subprocess.run(["youtube-dl --extract-audio --audio-format mp3 -a", self.f_name])
 		#https://www.youtube.com/watch?v=AXvr66tOERo&frags=pl%2Cwn
 		self.delete_file()
 		messagebox.showinfo("Hecho", "Se ha completado la descarga.")
@@ -82,9 +83,6 @@ class MusicDownloadGUI:
 
 	def delete_file(self):
 		os.remove(self.f_name)
-
-	def get_name(self):
-		return self.f_name
 
 window = Tk()
 window.resizable(0, 0)
