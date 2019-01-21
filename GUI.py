@@ -76,8 +76,12 @@ class MusicDownloadGUI:
 
 	def write_in_text(self):
 		input_lines = self.text_area.get("1.0", END).splitlines()
-		input_lines = [u.encode("utf-8") for u in input_lines]
-		input_lines = list(filter(str.strip, input_lines))
+		try:
+			input_lines = [u.encode("utf-8") for u in input_lines]
+			input_lines = list(filter(str.strip, input_lines))
+		except TypeError:
+			input_lines = [b.decode("utf-8") for b in input_lines]
+			input_lines = list(filter(str.strip, input_lines))
 		for l in input_lines:
 			self.file.write(l+'\n')
 		self.file.close()
