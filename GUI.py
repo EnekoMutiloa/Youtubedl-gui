@@ -29,6 +29,7 @@ class MusicDownloadGUI:
 		self.button_frame = None
 		self.text_scrollbar = None
 		self.exit_button = None
+		self.n_songs = None
 
 		self.f_name = 'list.txt'
 		self.file = open(self.f_name, "w+")
@@ -72,7 +73,7 @@ class MusicDownloadGUI:
 		#https://www.youtube.com/watch?v=AXvr66tOERo&frags=pl%2Cwn
 		#https://www.youtube.com/watch?v=8t4O5RnLSKI&frags=pl%2Cwn
 		self.delete_file()
-		messagebox.showinfo("Hecho", "Se ha completado la descarga.")
+		messagebox.showinfo("Hecho", "Se ha completado la descarga de " + str(self.n_songs) + " canciones.")
 
 	def write_in_text(self):
 		input_lines = self.text_area.get("1.0", END).splitlines()
@@ -82,6 +83,7 @@ class MusicDownloadGUI:
 		except TypeError:
 			input_lines = [b.decode("utf-8") for b in input_lines]
 			input_lines = list(filter(str.strip, input_lines))
+		self.n_songs = len(input_lines)
 		for l in input_lines:
 			self.file.write(l+'\n')
 		self.file.close()
