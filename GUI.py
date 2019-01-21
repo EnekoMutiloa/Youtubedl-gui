@@ -43,7 +43,7 @@ class MusicDownloadGUI:
 		self.label = None
 		self.text_area = None
 		self.download_button = None
-		self.top_frame = None
+		self.text_frame = None
 		self.entry_scrollbar = None
 		self.button_frame = None
 		self.text_scrollbar = None
@@ -53,42 +53,59 @@ class MusicDownloadGUI:
 		self.file = TextFile(f_name)
 		self.file.create_text_file()
 
-		self.initGui()
+		self.initGui(height, width)
 
 
-	def initGui(self):
-		'''Metodo que crea todos los widgets necesarios para manejar la interfaz. Botones, cuadros de escritura, etc.'''
-		self.top_frame = Frame(relief = 'sunken', bg = 'black')
-		self.label = Label(self.master, text="Escribir a continuacion las direcciones de las que se quiere descargar la musica. Una linea por url (direccion de internet):").pack()#(side=LEFT)
-		self.text_scrollbar = Scrollbar(self.text_area, orient='vertical', relief='raised')
-		self.text_scrollbar.pack(side = 'right', fill = 'y')  # cambiando ipady cambia la 'altura' del cuadro donde se escriben las tablas que contienen cierta variable
-		self.text_area = Text(self.master, relief = 'sunken', insertborderwidth = '2.0', yscrollcommand = self.text_scrollbar.set)
-		self.text_area.pack(fill = BOTH, expand = True)
+	def initGui(self, width, height):
+		'''Metodo que crea todos los widgets necesarios para manejar la interfaz. Botones, cuadros de escritura, scrollbars, etc.'''
 
-		#self.text_scrollbar.config(command = self.text_area.yview)
+		self.label = Label(self.master, text="Escribir a continuacion las direcciones de las que se quiere descargar la musica. Una linea por url (direccion de internet):")
+		self.label.pack()
+		'''Create a Frame for the Text and Scrollbar'''
+		self.text_frame = Frame(relief ='sunken', width = width, height = height)
+		self.text_frame.pack(fill ='both', expand = True) #fill='x' quiere decir que aprovecha el espacio horizontal disponible
 
+		'''create a Text widget'''
+		self.text_area = Text(self.text_frame, relief='sunken', borderwidth=3)
+		#self.text_area = Text(self.master, relief = 'sunken', insertborderwidth = '2.0', yscrollcommand = self.text_scrollbar.set)
+		self.text_area.pack(fill = 'x', expand = True)
 
-		self.top_frame.pack(fill = 'x', expand = True) #fill='x' quiere decir que aprovecha el espacio horizontal disponible
+		'''create a Scrollbar and associate it with txt'''
+		self.text_scrollbar = Scrollbar(self.text_frame, command = self.text_area.yview, orient='vertical', relief='raised')
+		self.text_scrollbar.pack(side = 'right', fill = 'y', ipady = 0)  # cambiando ipady cambia la 'altura' del cuadro donde se escriben las tablas que contienen cierta variable
+		#self.text_area['yscrollcommand'] = self.text_scrollbar.set()
 
+		'''Create a Frame for the buttons'''
 		self.button_frame = Frame(relief = 'raised', bg = 'gray')
-		self.download_button = Button(self.master, relief = "raised", text="Descargar", command = lambda: self.download_from_text()).pack(fill = 'x', expand = True)
-		self.exit_button = Button(self.master, relief = "raised", text = "Salir", command = self.master.quit).pack(fill = 'x', expand = True)
 		self.button_frame.pack(fill = 'x', expand = True)
+		self.download_button = Button(self.master, relief = "raised", text="Descargar", command = lambda: self.download_from_text())
+		self.download_button.pack(fill = 'x', expand = True)
+		self.exit_button = Button(self.master, relief = "raised", text = "Salir", command = self.master.quit)
+		self.exit_button.pack(fill = 'x', expand = True)
 
 
 
 	def download_from_text(self):
 		'''Metodo mediante el cual se realiza la descarga'''
-		##HAY QUE SEGUIR CON ESTE PUNTO. FALLA EL METODO GET
-		print(len(self.text_area.get("1.0", END)))
-		self.file.write_in_file(self.text_area.get("1.0", END))
-		res = subprocess.check_output(["youtube-dl", "--extract-audio", "--audio-format", "mp3", "-a", self.file.get_name])
+		self.write_in_text()
+		print('--------')
+		print(self.file.get_name)
+		print('--------')
+		#res = subprocess.check_output(["youtube-dl", "--extract-audio", "--audio-format", "mp3", "-a", self.file.get_name])
 		#https://www.youtube.com/watch?v=AXvr66tOERo&frags=pl%2Cwn
-		self.file.close_and_delete_file()
+		#self.file.close_and_delete_file()
 		messagebox.showinfo("Hecho", "Se ha completado la descarga.")
+
+	def write_in_text(self):
+		input_lines = self.text_area.get("1.0", END).splitlines()
+		input_lines = [u.encode("utf-8") for u in input_lines]
+		input_lines = list(filter(str.strip, input_lines))
+		for l in input_lines:
+			print(l)
+			self.file.write_in_file(l+'\n')
 
 window = Tk()
 window.resizable(0, 0)
 window.title("Descargar musica")
-my_gui = MusicDownloadGUI(window, 500, 500)
+my_gui = MusicDownloadGUI(window, 50, 100)
 window.mainloop()
