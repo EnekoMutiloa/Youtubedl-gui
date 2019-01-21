@@ -17,25 +17,6 @@ except ImportError:  # para jecutar en python 2.7
 	import os
 
 
-class TextFile:
-	
-	def __init__(self, name = 'list.txt'):
-		self.file = None
-		self.name = name
-		
-	def create_text_file(self):
-		self.file = open(self.name, 'w')
-
-	def close_and_delete_file(self):
-		self.file.close()
-		os.remove(self.name)
-
-	def write_in_file(self, url):
-		self.file.write(url)
-
-	def get_name(self):
-		return self.name
-
 class MusicDownloadGUI:
 	def __init__(self, master, height, width):
 		'''Metodo constructor de la clase que genera la interfaz'''
@@ -49,9 +30,8 @@ class MusicDownloadGUI:
 		self.text_scrollbar = None
 		self.exit_button = None
 
-		f_name = 'list.txt'
-		self.file = TextFile(f_name)
-		self.file.create_text_file()
+		self.f_name = 'list.txt'
+		self.file = open(self.f_name, "w+")
 
 		self.initGui(height, width)
 
@@ -84,16 +64,12 @@ class MusicDownloadGUI:
 		self.exit_button.pack(fill = 'x', expand = True)
 
 
-
 	def download_from_text(self):
 		'''Metodo mediante el cual se realiza la descarga'''
 		self.write_in_text()
-		print('--------')
-		print(self.file.get_name)
-		print('--------')
-		#res = subprocess.check_output(["youtube-dl", "--extract-audio", "--audio-format", "mp3", "-a", self.file.get_name])
+		res = subprocess.check_output(["youtube-dl", "--extract-audio", "--audio-format", "mp3", "-a", self.get_name])
 		#https://www.youtube.com/watch?v=AXvr66tOERo&frags=pl%2Cwn
-		#self.file.close_and_delete_file()
+		self.delete_file()
 		messagebox.showinfo("Hecho", "Se ha completado la descarga.")
 
 	def write_in_text(self):
@@ -101,8 +77,14 @@ class MusicDownloadGUI:
 		input_lines = [u.encode("utf-8") for u in input_lines]
 		input_lines = list(filter(str.strip, input_lines))
 		for l in input_lines:
-			print(l)
-			self.file.write_in_file(l+'\n')
+			self.file.write(l+'\n')
+		self.file.close()
+
+	def delete_file(self):
+		os.remove(self.f_name)
+
+	def get_name(self):
+		return self.f_name
 
 window = Tk()
 window.resizable(0, 0)
