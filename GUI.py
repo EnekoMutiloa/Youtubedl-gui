@@ -37,32 +37,33 @@ class MusicDownloadGUI:
 		self.initGui(height, width)
 
 
-	def initGui(self, width, height):
-		'''Metodo que crea todos los widgets necesarios para manejar la interfaz. Botones, cuadros de escritura, scrollbars, etc.'''
+		def initGui(self, width, height):
+			'''Metodo que crea todos los widgets necesarios para manejar la interfaz. Botones, cuadros de escritura, scrollbars, etc.'''
 
-		self.label = Label(self.master, text="Escribir a continuacion las direcciones de las que se quiere descargar la musica. Una linea por url (direccion de internet):")
-		self.label.pack()
-		'''Create a Frame for the Text and Scrollbar'''
-		self.text_frame = Frame(relief ='sunken', width = width, height = height)
-		self.text_frame.pack(fill ='both', expand = True) #fill='x' quiere decir que aprovecha el espacio horizontal disponible
+			self.label = Label(self.master, text="Escribir a continuacion las direcciones de las que se quiere descargar la musica. Una linea por url (direccion de internet):")
+			self.label.pack()
+			'''Create a Frame for the Text and Scrollbar'''
+			self.text_frame = Frame(relief ='sunken', width = width, height = height)
+			self.text_frame.pack(fill ='both', expand = True) #fill='x' quiere decir que aprovecha el espacio horizontal disponible
 
-		'''create a Text widget'''
-		self.text_area = Text(self.text_frame, relief='sunken', borderwidth=3)
-		#self.text_area = Text(self.master, relief = 'sunken', insertborderwidth = '2.0', yscrollcommand = self.text_scrollbar.set)
-		self.text_area.pack(fill = 'x', expand = True)
+			'''create a Text widget'''
+			self.text_area = Text(self.text_frame, relief='sunken', borderwidth=3)
+			#self.text_area = Text(self.master, relief = 'sunken', insertborderwidth = '2.0', yscrollcommand = self.text_scrollbar.set)
+			self.text_area.pack(fill = 'x', expand = True)
 
-		'''create a Scrollbar and associate it with txt'''
-		self.text_scrollbar = Scrollbar(self.text_frame, command = self.text_area.yview, orient='vertical', relief='raised')
-		self.text_scrollbar.pack(side = 'right', fill = 'y', ipady = 0)  # cambiando ipady cambia la 'altura' del cuadro donde se escriben las tablas que contienen cierta variable
-		#self.text_area['yscrollcommand'] = self.text_scrollbar.set()
+			'''create a Scrollbar and associate it with txt'''
+			self.text_scrollbar = Scrollbar(self.text_frame, command = self.text_area.yview, orient='vertical', relief='raised')
+			self.text_scrollbar.pack(side = 'right', fill = 'y', ipady = 0)  # cambiando ipady cambia la 'altura' del cuadro donde se escriben las tablas que contienen cierta variable
+			#self.text_area['yscrollcommand'] = self.text_scrollbar.set()
+			### TODO: Corregir lo del scrollbar! sale debajo de donde tiene que salir
 
-		'''Create a Frame for the buttons'''
-		self.button_frame = Frame(relief = 'raised', bg = 'gray')
-		self.button_frame.pack(fill = 'x', expand = True)
-		self.download_button = Button(self.master, relief = "raised", text="Descargar", command = lambda: self.download_from_text())
-		self.download_button.pack(fill = 'x', expand = True)
-		self.exit_button = Button(self.master, relief = "raised", text = "Salir", command = self.master.quit)
-		self.exit_button.pack(fill = 'x', expand = True)
+			'''Create a Frame for the buttons'''
+			self.button_frame = Frame(relief = 'raised', bg = 'gray')
+			self.button_frame.pack(fill = 'x', expand = True)
+			self.download_button = Button(self.master, relief = "raised", text="Descargar", command = lambda: self.download_from_text())
+			self.download_button.pack(fill = 'x', expand = True)
+			self.exit_button = Button(self.master, relief = "raised", text = "Salir", command = self.master.quit)
+			self.exit_button.pack(fill = 'x', expand = True)
 
 
 	def download_from_text(self):
