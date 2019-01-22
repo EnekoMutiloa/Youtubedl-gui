@@ -70,6 +70,10 @@ class MusicDownloadGUI:
 		self.write_in_text()
 		os.system("youtube-dl --extract-audio --audio-format mp3 -a " + self.f_name)
 		#subprocess.run(["youtube-dl --extract-audio --audio-format mp3 -a", self.f_name])
+		### TODO: documentar
+		### TODO: convertir py2exe --> Windows
+		### TODO: Hay que conseguir capturar el output de la consola para ver que pone y sacar un mensaje de error.
+		### TODO: Se puede parsear para ver si pone que hay que actualizar youtube-dl y si es asi lanzar el comando de actualizacion. Con estp sacar una ventana que diga: se esta actualizando
 		#https://www.youtube.com/watch?v=AXvr66tOERo&frags=pl%2Cwn
 		#https://www.youtube.com/watch?v=8t4O5RnLSKI&frags=pl%2Cwn
 		self.delete_file()
