@@ -6,9 +6,7 @@ try: # para ejecutar en python3.X
 	from tkinter import messagebox
 	import tkinter.font as tkFont
 	import tkinter.ttk as ttk
-	import subprocess
 	import os
-	import re
 
 except ImportError:  # para jecutar en python 2.7
 	from Tkinter import *
@@ -16,9 +14,7 @@ except ImportError:  # para jecutar en python 2.7
 	import tkMessageBox as messagebox
 	import tkFont
 	import ttk
-	import subprocess
 	import os
-	import re
 
 
 class MusicDownloadGUI:
@@ -88,18 +84,15 @@ class MusicDownloadGUI:
 		os.system('youtube-dl --extract-audio --audio-format mp3 -a ' + self.f_name + ' > tmp')
 		out = open('tmp', 'r').readlines()
 
-		# TODO: HAY QUE PONER ESTO BIEN! DEVUELVE NONETYPE
-		a = []
+		n_songs = 0
 		for line in out:
-			groups = re.search('(\[.+?\]\sDestination\:)(.+?)$', line)
-			print(type(groups))
-			print(groups)
-			a.append(groups(0))
-		print(a)
-
+			if '[ffmpeg] Destination' in line:
+				n_songs += 1
+		#(\[ffmpeg\]\sDestination\:)\s(.*)\.(.*)$
 		# ERROR QUE NECESITA UPDATE: Make sure you are using the latest version; type  youtube-dl -U  to update.
 		# NUMERO DE CANCIONES DESCARGADAS: Concatenacion [download] Destination: + [ffmpeg] Destination:
 
+		messagebox.showinfo('Hecho', 'Se ha completado la descarga de ' + str(n_songs) + ' canciones')
 		#try:
 		#	subprocess.call(['youtube-dl --extract-audio --audio-format mp3 -a', self.f_name])
 		#	messagebox.showinfo('Hecho', 'Se ha completado la descarga de ' + str(n_songs) + ' canciones')
