@@ -19,7 +19,7 @@ except ImportError:  # para jecutar en python 2.7
 
 class MusicDownloadGUI:
 	def __init__(self, master, height, width):
-		'''Metodo constructor de la clase que genera la interfaz'''
+		'''Constructor method of the MusicDownloadGUI class'''
 		self.master = master
 		self.label = None
 		self.text_area = None
@@ -36,38 +36,37 @@ class MusicDownloadGUI:
 
 		self.initGui(height, width)
 
+	def initGui(self, width, height):
+		''' Method that initializes all the necessary widgets for the gui. Buttons, text areas, scrollbars etc.'''
 
-		def initGui(self, width, height):
-			'''Metodo que crea todos los widgets necesarios para manejar la interfaz. Botones, cuadros de escritura, scrollbars, etc.'''
+		self.label = Label(self.master, text = "Escribir a continuacion las direcciones de las que se quiere descargar la musica. Una linea por url (direccion de internet):")
+		self.label.pack()
 
-			self.label = Label(self.master, text="Escribir a continuacion las direcciones de las que se quiere descargar la musica. Una linea por url (direccion de internet):")
-			self.label.pack()
-			'''Create a Frame for the Text and Scrollbar'''
-			self.text_frame = Frame(relief ='sunken', width = width, height = height)
-			self.text_frame.pack(fill ='both', expand = True) #fill='x' quiere decir que aprovecha el espacio horizontal disponible
+		'''Create a Frame for the Text and Scrollbar'''
+		self.text_frame = Frame(relief = 'sunken', width = width, height = height)
+		self.text_frame.pack(fill = 'both', expand = True)  # fill = 'x' quiere decir que aprovecha el espacio horizontal disponible
 
-			'''create a Text widget'''
-			self.text_area = Text(self.text_frame, relief='sunken', borderwidth=3)
-			#self.text_area = Text(self.master, relief = 'sunken', insertborderwidth = '2.0', yscrollcommand = self.text_scrollbar.set)
-			self.text_area.pack(fill = 'x', expand = True)
+		'''create a Scrollbar and associate it with txt'''
+		self.text_scrollbar = Scrollbar(self.text_frame, orient = 'vertical')
+		self.text_scrollbar.pack(side = 'right', fill = 'y')
 
-			'''create a Scrollbar and associate it with txt'''
-			self.text_scrollbar = Scrollbar(self.text_frame, command = self.text_area.yview, orient='vertical', relief='raised')
-			self.text_scrollbar.pack(side = 'right', fill = 'y', ipady = 0)  # cambiando ipady cambia la 'altura' del cuadro donde se escriben las tablas que contienen cierta variable
-			#self.text_area['yscrollcommand'] = self.text_scrollbar.set()
-			### TODO: Corregir lo del scrollbar! sale debajo de donde tiene que salir
+		'''create a Text widget'''
+		self.text_area = Text(self.text_frame, relief = 'sunken', borderwidth = 2, yscrollcommand = self.text_scrollbar.set)
+		# self.text_area = Text(self.master, relief = 'sunken', insertborderwidth = '2.0', yscrollcommand = self.text_scrollbar.set)
+		self.text_area.pack(fill = 'x', expand = True)
+		self.text_scrollbar.config(command = self.text_area.yview)
 
-			'''Create a Frame for the buttons'''
-			self.button_frame = Frame(relief = 'raised', bg = 'gray')
-			self.button_frame.pack(fill = 'x', expand = True)
-			self.download_button = Button(self.master, relief = "raised", text="Descargar", command = lambda: self.download_from_text())
-			self.download_button.pack(fill = 'x', expand = True)
-			self.exit_button = Button(self.master, relief = "raised", text = "Salir", command = self.master.quit)
-			self.exit_button.pack(fill = 'x', expand = True)
-
+		'''Create a Frame for the buttons'''
+		self.button_frame = Frame(relief = 'raised', bg = 'gray')
+		self.button_frame.pack(fill = 'x', expand = True)
+		self.download_button = Button(self.master, relief = "raised", text = "Descargar", command = lambda: self.download_from_text())
+		self.download_button.pack(fill = 'x', expand = True)
+		self.exit_button = Button(self.master, relief = "raised", text = "Salir", command = self.master.quit)
+		self.exit_button.pack(fill = 'x', expand = True)
 
 	def download_from_text(self):
-		'''Metodo mediante el cual se realiza la descarga'''
+		'''Method that downloads everything in the text file. It shows a message when the process finishes.
+		This method deletes the text file also. '''
 		self.write_in_text()
 		os.system("youtube-dl --extract-audio --audio-format mp3 -a " + self.f_name)
 		#subprocess.run(["youtube-dl --extract-audio --audio-format mp3 -a", self.f_name])
@@ -75,12 +74,14 @@ class MusicDownloadGUI:
 		### TODO: convertir py2exe --> Windows
 		### TODO: Hay que conseguir capturar el output de la consola para ver que pone y sacar un mensaje de error.
 		### TODO: Se puede parsear para ver si pone que hay que actualizar youtube-dl y si es asi lanzar el comando de actualizacion. Con estp sacar una ventana que diga: se esta actualizando
-		#https://www.youtube.com/watch?v=AXvr66tOERo&frags=pl%2Cwn
-		#https://www.youtube.com/watch?v=8t4O5RnLSKI&frags=pl%2Cwn
+		#https://www.youtube.com/watch?v = AXvr66tOERo&frags = pl%2Cwn
+		#https://www.youtube.com/watch?v = 8t4O5RnLSKI&frags = pl%2Cwn
 		self.delete_file()
 		messagebox.showinfo("Hecho", "Se ha completado la descarga de " + str(self.n_songs) + " canciones.")
 
 	def write_in_text(self):
+		'''Method that reads the lines in the text area and writes them in the file that is going to be used in the bash process'''
+
 		input_lines = self.text_area.get("1.0", END).splitlines()
 		try:
 			input_lines = [u.encode("utf-8") for u in input_lines]
