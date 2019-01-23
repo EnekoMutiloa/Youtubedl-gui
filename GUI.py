@@ -73,9 +73,9 @@ class MusicDownloadGUI:
 
 	def download_from_text(self):
 		'''
-				Method that downloads everything in the text file. It shows a message when the process finishes.
-				This method deletes the text file also.
-				'''
+		Method that downloads everything in the text file. It shows a message when the process finishes.
+		This method deletes the text file also.
+		'''
 		self.write_in_text()
 		#https://www.youtube.com/watch?v=AXvr66tOERo&frags=pl%2Cwn
 		#https://www.youtube.com/watch?v=DMkDwIM3piA&list=PL0_Zm4Wcsi0K_KT9jkrwPYhCr-oK1vU-r
@@ -84,30 +84,35 @@ class MusicDownloadGUI:
 		os.system('youtube-dl --extract-audio --audio-format mp3 -a ' + self.f_name + ' > tmp')
 		out = open('tmp', 'r').readlines()
 
+		#print('----------------------------')
+		#print(open('tmp', 'r').read())
+		#print('----------------------------')
+
 		n_songs = 0
 		for line in out:
-			if '[ffmpeg] Destination' in line:
+			if 'Make sure you are using the latest version; type  youtube-dl -U  to update.' in line :
+				messagebox.showerror('Error', 'Ha ocurrido un error en la ejecución \n Es necesario actualizar la herramienta. \
+				Pinche y dará comienzo la actualización')
+				os.system('youtube-dl -U')
+				#self.beep()
+				messagebox.showinfo('Actualizado', 'Se ha completado la actualización. Ya continuar con la descarga')
+				raise Exception ('Need to update youtube-dl')
+			elif '[ffmpeg] Destination' in line:
 				n_songs += 1
+		if n_songs == 1:
+			str_end = str(n_songs) + ' canción'
+		else:
+			str_end = str(n_songs) + ' canciones'
+		#self.beep()
+		messagebox.showinfo('Hecho', 'Se ha completado la descarga de ' + str_end)
 		#(\[ffmpeg\]\sDestination\:)\s(.*)\.(.*)$
 		# ERROR QUE NECESITA UPDATE: Make sure you are using the latest version; type  youtube-dl -U  to update.
 		# NUMERO DE CANCIONES DESCARGADAS: Concatenacion [download] Destination: + [ffmpeg] Destination:
 
-		messagebox.showinfo('Hecho', 'Se ha completado la descarga de ' + str(n_songs) + ' canciones')
-		#try:
-		#	subprocess.call(['youtube-dl --extract-audio --audio-format mp3 -a', self.f_name])
-		#	messagebox.showinfo('Hecho', 'Se ha completado la descarga de ' + str(n_songs) + ' canciones')
-		#self.delete_file()
-		#except NameError as err: #NameError as err or
-		#	messagebox.showerror('Error', 'La dirección ' +' no es válida.' + str(err))
-		#	self.delete_file()
-		#except OSError as err:
-		#	messagebox.showerror('Error', 'Ha ocurrido un error en la ejecución \n OS error:'+ str(err) + '.')
-		#	self.delete_file()
-
 		self.delete_file()
 		os.remove('tmp')
 		### TODO: convertir py2exe --> Windows
-		### TODO: Hay que conseguir capturar el output de la consola para ver que pone y sacar un mensaje de error.
+		### TODO: Implementar un sonido cuando sale una ventana
 
 	def write_in_text(self):
 		'''
@@ -121,16 +126,20 @@ class MusicDownloadGUI:
 		except TypeError: # Python 3.x
 			input_lines = [b.decode('utf-8') for b in input_lines]
 			input_lines = list(filter(str.strip, input_lines))
+		if len(input_lines) == 0:
+			#self.beep()
+			messagebox.showerror('Error', 'No se ha insertado ninguna URL desde la que realizar la descarga')
+			raise Exception('No se ha insertado ninguna URL desde la que realizar la descarga')
 		self.file = open(self.f_name, 'w+')
 		for l in input_lines:
-			#print('------------------')
-			#print(l)
-			#print('------------------')
 			self.file.write(l+'\n')
 		self.file.close()
 
 	def delete_file(self):
 		os.remove(self.f_name)
+
+	#def beep(self):
+	#	print "\a"
 
 window = Tk()
 my_gui = MusicDownloadGUI(window, 50, 100)
