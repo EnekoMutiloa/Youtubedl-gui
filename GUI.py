@@ -19,7 +19,9 @@ except ImportError:  # para jecutar en python 2.7
 
 class MusicDownloadGUI:
 	def __init__(self, master, height, width):
-		'''Constructor method of the MusicDownloadGUI class'''
+		'''
+		Constructor method of the MusicDownloadGUI class
+		'''
 		self.master = master
 		self.master.resizable(0, 0)
 		self.master.title("Descargar musica")
@@ -39,7 +41,11 @@ class MusicDownloadGUI:
 		self.initGui(height, width)
 
 	def initGui(self, width, height):
-		''' Method that initializes all the necessary widgets for the gui. Buttons, text areas, scrollbars etc.'''
+		'''
+		Method that initializes all the necessary widgets for the gui. Buttons, text areas, scrollbars etc.
+		:param width: width of the window
+		:param height: height of the window
+		'''
 
 		self.label = Label(self.master, text = "Escribir a continuacion las direcciones de las que se quiere descargar la musica. Una linea por url (direccion de internet):")
 		self.label.pack()
@@ -67,28 +73,36 @@ class MusicDownloadGUI:
 		self.exit_button.pack(fill = 'x', expand = True)
 
 	def download_from_text(self):
-		'''Method that downloads everything in the text file. It shows a message when the process finishes.
-		This method deletes the text file also. '''
+		'''
+		Method that downloads everything in the text file. It shows a message when the process finishes.
+		This method deletes the text file also.
+		'''
 		self.write_in_text()
-		os.system("youtube-dl --extract-audio --audio-format mp3 -a " + self.f_name)
+		os.system("youtube-dl --extract-audio --audio-format mp3 -a " + self.f_name + ' > tmp')
+		out = open('tmp', 'r').read()
+		print('---------------------------------------')
+		print(out)
+		print('---------------------------------------')
+		os.remove('tmp')
 		#subprocess.run(["youtube-dl --extract-audio --audio-format mp3 -a", self.f_name])
-		### TODO: documentar
 		### TODO: convertir py2exe --> Windows
 		### TODO: Hay que conseguir capturar el output de la consola para ver que pone y sacar un mensaje de error.
 		### TODO: Se puede parsear para ver si pone que hay que actualizar youtube-dl y si es asi lanzar el comando de actualizacion. Con estp sacar una ventana que diga: se esta actualizando
-		#https://www.youtube.com/watch?v = AXvr66tOERo&frags = pl%2Cwn
-		#https://www.youtube.com/watch?v = 8t4O5RnLSKI&frags = pl%2Cwn
+		#https://www.youtube.com/watch?v=AXvr66tOERo&frags=pl%2Cwn
+		#https://www.youtube.com/watch?v=8t4O5RnLSKI&frags=pl%2Cwn
 		self.delete_file()
 		messagebox.showinfo("Hecho", "Se ha completado la descarga de " + str(self.n_songs) + " canciones.")
 
 	def write_in_text(self):
-		'''Method that reads the lines in the text area and writes them in the file that is going to be used in the bash process'''
+		'''
+		Method that reads the lines in the text area and writes them in the file that is going to be used in the bash process
+		'''
 
 		input_lines = self.text_area.get("1.0", END).splitlines()
-		try:
+		try:  # Python 2.x
 			input_lines = [u.encode("utf-8") for u in input_lines]
 			input_lines = list(filter(str.strip, input_lines))
-		except TypeError:
+		except TypeError: # Python 3.x
 			input_lines = [b.decode("utf-8") for b in input_lines]
 			input_lines = list(filter(str.strip, input_lines))
 		self.n_songs = len(input_lines)
