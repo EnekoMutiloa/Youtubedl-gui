@@ -21,6 +21,8 @@ class MusicDownloadGUI:
 	def __init__(self, master, height, width):
 		'''Constructor method of the MusicDownloadGUI class'''
 		self.master = master
+		self.master.resizable(0, 0)
+		self.master.title("Descargar musica")
 		self.label = None
 		self.text_area = None
 		self.download_button = None
@@ -98,7 +100,5 @@ class MusicDownloadGUI:
 		os.remove(self.f_name)
 
 window = Tk()
-window.resizable(0, 0)
-window.title("Descargar musica")
 my_gui = MusicDownloadGUI(window, 50, 100)
 window.mainloop()
