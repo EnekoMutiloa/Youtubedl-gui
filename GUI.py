@@ -68,7 +68,7 @@ class MusicDownloadGUI:
 		self.button_frame.pack(fill = 'x', expand = True)
 		self.download_button = Button(self.master, relief = 'raised', text = 'Descargar', command = lambda: self.download_from_text())
 		self.download_button.pack(fill = 'x', expand = True)
-		self.exit_button = Button(self.master, relief = 'raised', text = 'Salir', command = self.master.quit)
+		self.exit_button = Button(self.master, relief = 'raised', text = 'Salir', command = lambda: exit())#self.master.quit)
 		self.exit_button.pack(fill = 'x', expand = True)
 
 	def download_from_text(self):
@@ -89,22 +89,35 @@ class MusicDownloadGUI:
 		#print('----------------------------')
 
 		n_songs = 0
-		for line in out:
-			if 'Make sure you are using the latest version; type  youtube-dl -U  to update.' in line :
-				messagebox.showerror('Error', 'Ha ocurrido un error en la ejecución \n Es necesario actualizar la herramienta. \
-				Pinche y dará comienzo la actualización')
-				os.system('youtube-dl -U')
-				#self.beep()
-				messagebox.showinfo('Actualizado', 'Se ha completado la actualización. Ya continuar con la descarga')
-				raise Exception ('Need to update youtube-dl')
-			elif '[ffmpeg] Destination' in line:
-				n_songs += 1
+		if len(out) == 0:  # 'youtube-dl: command not found' in line:
+			messagebox.showerror('FATAL ERROR', 'Youtube-dl no está instalado.\nPor favor instálelo antes de continuar.')
+			raise Exception('Youtube-dl not installed')
+		elif len(out) == 1 and len(open(self.f_name, 'r').read()) != 0:
+			# Unable to download webpage: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed (_ssl.c:661)> (caused by URLError(SSLError(1, u'[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed (_ssl.c:661)'),))
+			messagebox.showerror('Error', 'Ha ocurrido un error en la ejecución \nHa habido un error con la red')
+			raise Exception('URL open error')
+		else:
+			for line in out:
+				if 'Make sure you are using the latest version; type  youtube-dl -U  to update.' in line :
+					messagebox.showerror('Error', 'Ha ocurrido un error en la ejecución \n Es necesario actualizar la herramienta. \
+					Pinche y dará comienzo la actualización')
+					os.system('youtube-dl -U')
+					#self.beep()
+					messagebox.showinfo('Actualizado', 'Se ha completado la actualización. Ya continuar con la descarga')
+					raise Exception ('Need to update youtube-dl')
+				elif 'is not a valid URL' in line:
+					messagebox.showerror('Error', 'Ha ocurrido un error en la ejecución \n La URL introducida no es válida')
+					raise Exception('Not valid URL')
+				elif '[ffmpeg] Destination' in line:
+					n_songs += 1
+
 		if n_songs == 1:
 			str_end = str(n_songs) + ' canción'
 		else:
 			str_end = str(n_songs) + ' canciones'
-		#self.beep()
-		messagebox.showinfo('Hecho', 'Se ha completado la descarga de ' + str_end)
+		if n_songs > 0:
+			#self.beep()
+			messagebox.showinfo('Hecho', 'Se ha completado la descarga de ' + str_end)
 		#(\[ffmpeg\]\sDestination\:)\s(.*)\.(.*)$
 		# ERROR QUE NECESITA UPDATE: Make sure you are using the latest version; type  youtube-dl -U  to update.
 		# NUMERO DE CANCIONES DESCARGADAS: Concatenacion [download] Destination: + [ffmpeg] Destination:
@@ -112,6 +125,7 @@ class MusicDownloadGUI:
 		self.delete_file()
 		os.remove('tmp')
 		### TODO: convertir py2exe --> Windows
+		### TODO: Implementar multihilo
 		### TODO: Implementar un sonido cuando sale una ventana
 
 	def write_in_text(self):
