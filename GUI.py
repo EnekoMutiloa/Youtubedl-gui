@@ -89,12 +89,24 @@ class MusicDownloadGUI:
 		#print('----------------------------')
 
 		n_songs = 0
-		if len(out) == 0:  # 'youtube-dl: command not found' in line:
-			messagebox.showerror('FATAL ERROR', 'Youtube-dl no está instalado.\nPor favor instálelo antes de continuar.')
-			raise Exception('Youtube-dl not installed')
+		n_songs = 0
+		if len(out) == 0:
+			if 'http' not in open(self.f_name, 'r').read():
+				messagebox.showerror('Error', 'Ha ocurrido un error en la ejecución \n La URL introducida no es válida')
+				self.delete_file()
+				os.remove('tmp')
+				raise Exception('Not valid URL')
+			else:  # 'youtube-dl: command not found' in line:
+				messagebox.showerror('FATAL ERROR',
+				                     'Youtube-dl no está instalado o en la carpeta en la que está este fichero.\nPor favor instálelo antes de continuar.')
+				self.delete_file()
+				os.remove('tmp')
+				raise Exception('Youtube-dl not installed')
 		elif len(out) == 1 and len(open(self.f_name, 'r').read()) != 0:
 			# Unable to download webpage: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed (_ssl.c:661)> (caused by URLError(SSLError(1, u'[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed (_ssl.c:661)'),))
 			messagebox.showerror('Error', 'Ha ocurrido un error en la ejecución \nHa habido un error con la red')
+			self.delete_file()
+			os.remove('tmp')
 			raise Exception('URL open error')
 		else:
 			for line in out:
