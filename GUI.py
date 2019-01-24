@@ -117,9 +117,9 @@ class MusicDownloadGUI:
 					#self.beep()
 					messagebox.showinfo('Actualizado', 'Se ha completado la actualización. Ya continuar con la descarga')
 					raise Exception ('Need to update youtube-dl')
-				elif 'is not a valid URL' in line:
-					messagebox.showerror('Error', 'Ha ocurrido un error en la ejecución \n La URL introducida no es válida')
-					raise Exception('Not valid URL')
+				#elif 'is not a valid URL' in line:
+				#	messagebox.showerror('Error', 'Ha ocurrido un error en la ejecución \n La URL introducida no es válida')
+				#	raise Exception('Not valid URL')
 				elif '[ffmpeg] Destination' in line:
 					n_songs += 1
 
