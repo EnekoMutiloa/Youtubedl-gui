@@ -1,6 +1,4 @@
 #
-# $Id$
-#
 # Combobox bindings.
 #
 # <<NOTE-WM-TRANSIENT>>:
@@ -114,9 +112,12 @@ switch -- [tk windowingsystem] {
 #
 proc ttk::combobox::Press {mode w x y} {
     variable State
+
+    $w instate disabled { return }
+
     set State(entryPress) [expr {
-	   [$w instate {!readonly !disabled}]
-	&& [string match *textarea [$w identify $x $y]]
+	   [$w instate !readonly]
+	&& [string match *textarea [$w identify element $x $y]]
     }]
 
     focus $w
@@ -367,7 +368,8 @@ proc ttk::combobox::PlacePopdown {cb popdown} {
     set y [winfo rooty $cb]
     set w [winfo width $cb]
     set h [winfo height $cb]
-    set postoffset [ttk::style lookup TCombobox -postoffset {} {0 0 0 0}]
+    set style [$cb cget -style]
+    set postoffset [ttk::style lookup $style -postoffset {} {0 0 0 0}]
     foreach var {x y w h} delta $postoffset {
     	incr $var $delta
     }
