@@ -1,5 +1,5 @@
 # Youtubedl-gui
 
-# How to build
+## How to build
 
     python build.py build
