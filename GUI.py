@@ -136,9 +136,7 @@ class MusicDownloadGUI:
 
 		self.delete_file()
 		os.remove('tmp')
-		### TODO: convertir py2exe --> Windows
 		### TODO: Implementar multihilo
-		### TODO: Implementar un sonido cuando sale una ventana
 
 	def write_in_text(self):
 		'''
