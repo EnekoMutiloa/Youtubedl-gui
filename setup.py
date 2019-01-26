@@ -1,12 +1,13 @@
 #To create the .exe file for windows:
 
-#pip3 install pyinstaller
-#pyinstaller GUI.y
+#EN WINDOWS!!!
+pip install pyinstaller
+pyinstaller GUI.py
 
-from distutils.core import setup
-import py2exe
-import sys
+#from distutils.core import setup
+#import py2exe
+#import sys
 
-setup(
-	windows=['GUI.py'],
-)
+#setup(
+#	windows=['GUI.py'],
+#)
