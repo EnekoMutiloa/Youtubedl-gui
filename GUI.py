@@ -136,9 +136,8 @@ class MusicDownloadGUI:
 
 		self.delete_file()
 		os.remove('tmp')
-		### TODO: convertir py2exe --> Windows
+		### TODO: Hacer que no haya que instalar ffmpeg o que se descargue sólo. ¿¿Que python sea el que convierta los archivos de audio a mp3???
 		### TODO: Implementar multihilo
-		### TODO: Implementar un sonido cuando sale una ventana
 
 	def write_in_text(self):
 		'''
