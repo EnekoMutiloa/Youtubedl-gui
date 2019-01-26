@@ -136,6 +136,7 @@ class MusicDownloadGUI:
 
 		self.delete_file()
 		os.remove('tmp')
+		### TODO: Hacer que no haya que instalar ffmpeg o que se descargue sólo. ¿¿Que python sea el que convierta los archivos de audio a mp3???
 		### TODO: Implementar multihilo
 
 	def write_in_text(self):
