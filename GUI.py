@@ -7,6 +7,7 @@ try: # para ejecutar en python3.X
 	import tkinter.font as tkFont
 	import tkinter.ttk as ttk
 	import os
+	import youtube_dl
 
 except ImportError:  # para jecutar en python 2.7
 	from Tkinter import *
@@ -37,9 +38,9 @@ class MusicDownloadGUI:
 		self.f_name = 'list.txt'
 		self.file = None
 
-		self.initGui(height, width)
-
-	def initGui(self, width, height):
+		self.initGui(master, height, width)
+		
+	def initGui(self, master, width, height):
 		'''
 		Method that initializes all the necessary widgets for the gui. Buttons, text areas, scrollbars etc.
 		:param width: width of the window
@@ -68,7 +69,7 @@ class MusicDownloadGUI:
 		self.button_frame.pack(fill = 'x', expand = True)
 		self.download_button = Button(self.master, relief = 'raised', text = 'Descargar', command = lambda: self.download_from_text())
 		self.download_button.pack(fill = 'x', expand = True)
-		self.exit_button = Button(self.master, relief = 'raised', text = 'Salir', command = lambda: exit())#self.master.quit)
+		self.exit_button = Button(self.master, relief = 'raised', text = 'Salir', command = lambda: master.quit())#self.master.quit)
 		self.exit_button.pack(fill = 'x', expand = True)
 
 	def download_from_text(self):
@@ -165,6 +166,9 @@ class MusicDownloadGUI:
 
 	#def beep(self):
 	#	print "\a"
+	
+	def exit():
+		pass
 
 window = Tk()
 my_gui = MusicDownloadGUI(window, 50, 100)
